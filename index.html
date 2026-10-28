@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#102a43">
+  <meta name="description" content="Tus dos trayectos de autobús urbano en Gijón: desde El Corte Inglés a Rey Pelayo y desde Rey Pelayo hasta ALSA.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <title>Mi Bus Gijón · Tus trayectos</title>
+  <style>
+    :root{--ink:#142b43;--muted:#5f7285;--bg:#f3f7fb;--panel:#ffffff;--line:#dce5ee;--blue:#196be7;--navy:#102a43;--green:#08795f;--pale:#e7f2ff;--radius:20px;color-scheme:light}
+    *{box-sizing:border-box} [hidden]{display:none!important} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.43}
+    button,input,a{font:inherit} a{text-decoration:none;color:inherit} button{cursor:pointer} button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f7a92a;outline-offset:3px}
+    .shell{max-width:580px;margin:auto;padding:0 16px 108px}
+    .head{background:linear-gradient(135deg,#102a43 0%,#174974 78%,#24619a 100%);color:#fff;border-radius:0 0 30px 30px;margin:0 -16px 22px;padding:24px 20px 24px;position:relative;overflow:hidden}
+    .head:after{content:"";position:absolute;width:230px;height:230px;border:1px solid #ffffff27;border-radius:50%;right:-115px;top:-104px;box-shadow:0 0 0 36px #ffffff08,0 0 0 72px #ffffff08;pointer-events:none}
+    .brand{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+    .brand-icon{background:#ffffff24;width:48px;height:48px;border:1px solid #ffffff38;border-radius:16px;display:grid;place-items:center;flex:none}
+    .brand-icon svg{width:29px;height:29px}
+    .brand h1{margin:0;font-size:23px;letter-spacing:-.7px}.brand p{margin:2px 0 0;color:#c8dcf0;font-size:12px;letter-spacing:.2px}
+    .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:23px;position:relative;z-index:1}
+    .clock{font-weight:800;font-size:35px;letter-spacing:-1.7px;font-variant-numeric:tabular-nums}.today{display:block;color:#cadeef;font-size:13px;font-weight:500;margin-top:-4px}
+    .signal{display:flex;align-items:center;gap:6px;font-size:12px;color:#e5f0fa;background:#ffffff16;border:1px solid #ffffff2b;padding:7px 10px;border-radius:999px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#7ee5af}.signal.off .dot{background:#fcb985}
+    .sec-title{font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px;color:#516982}
+    .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}.mode{border:1.5px solid var(--line);background:#fff;border-radius:19px;padding:15px 10px;text-align:left;min-height:92px;color:var(--ink);box-shadow:0 3px 12px #15304b05}.mode.active{border-color:#1468e8;background:#e9f2ff;box-shadow:0 4px 15px #2368b91a}.mode .glyph{display:block;font-size:24px;margin-bottom:7px}.mode strong{font-size:15px;display:block}.mode small{font-size:12px;color:var(--muted);display:block;margin-top:2px}.mode.active strong{color:#155abe}
+    .panel{background:#fff;border-radius:22px;border:1px solid #e4ebf2;padding:20px;margin:0 0 16px;box-shadow:0 5px 24px #19365008}
+    .pill{display:inline-flex;align-items:center;gap:6px;border-radius:30px;background:#e8f2ff;color:#135bc4;font-size:12px;font-weight:800;padding:6px 10px}
+    .headline{font-size:25px;letter-spacing:-.7px;line-height:1.2;margin:12px 0 8px}.sub{color:#587087;margin:0;font-size:14px}
+    .route{display:grid;grid-template-columns:43px minmax(0,1fr);gap:0;margin:22px 0 2px}.rail{display:flex;flex-direction:column;align-items:center}.circle{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#155ebf;color:#fff;font-size:13px;font-weight:800;flex:none}.circle.finish{background:#0c8064}.stick{height:56px;width:2px;margin:6px 0;background:repeating-linear-gradient(to bottom,#b8cbe0 0,#b8cbe0 6px,transparent 6px,transparent 12px)}
+    .stop{padding:2px 0 0}.stop .micro{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:850;color:#7c8d9d}.stop b{display:block;font-size:16px;margin:3px 0}.stop span{display:block;color:#6d7f8f;font-size:13px}.last{padding-bottom:8px}
+    .stopchoice{display:flex;gap:8px;margin-top:17px}.choice{padding:10px 12px;border:1px solid #dce5ef;border-radius:12px;background:#f9fbfe;color:#456079;font-size:13px;font-weight:800;flex:1}.choice.selected{border-color:#196be7;background:#eaf2ff;color:#165bc0}
+    .primary{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:0;background:#1767e3;color:#fff;border-radius:15px;padding:15px 16px;min-height:54px;font-weight:800;font-size:15px;box-shadow:0 7px 18px #1465db2c}.primary svg,.secondary svg{width:18px;height:18px}.secondary{display:flex;justify-content:center;align-items:center;gap:8px;width:100%;padding:12px;background:#f8fbff;border:1px solid #dbe6f4;border-radius:14px;color:#145bb3;font-size:14px;font-weight:800;margin-top:10px}
+    .realtime-note{margin:10px 0 0;color:#768698;font-size:12px;text-align:center;line-height:1.45}
+    .rowtitle{display:flex;align-items:center;justify-content:space-between;margin:2px 0 12px}.rowtitle h2{font-size:19px;margin:0;letter-spacing:-.4px}.rowtitle small{color:#778899;font-size:12px}
+    .buscard{display:flex;align-items:center;gap:13px;border:1px solid #e1e9f1;border-radius:15px;padding:13px;margin-bottom:10px;background:#fff}.busnum{width:57px;height:55px;border-radius:14px;display:grid;place-items:center;color:#fff;background:#165fb9;font-weight:850;font-size:26px;flex:none}.busnum.green{background:#0c8064}.busnum.purple{background:#7c55b2}.busnum.gray{background:#5f7388;font-size:17px;letter-spacing:-.4px}.busmeta{min-width:0;flex:1}.busmeta strong{font-size:15px;display:block;line-height:1.25}.busmeta small{font-size:13px;color:#697d8d;display:block;margin-top:5px;line-height:1.4}.dest{background:#eaf6f2;color:#12654f;border-radius:100px;display:inline-block;padding:3px 7px;font-size:11px;font-weight:850;margin-top:6px}
+    .notebox{display:flex;gap:10px;border-radius:14px;background:#fff8e9;border:1px solid #f2dfb7;padding:13px;margin:14px 0 0;color:#795a19;font-size:13px}.notebox .ico{font-size:19px}
+    .times{border:1px solid #dfebf6;border-radius:18px;background:#f0f7ff;padding:17px 18px;margin:16px 0 0}.times h3{font-size:15px;margin:0 0 9px}.times label{font-size:13px;font-weight:700;display:block;margin-bottom:8px}.time-row{display:flex;gap:8px;align-items:center}.time-row input{flex:1;min-width:0;border:1px solid #b7cde5;border-radius:12px;padding:12px;background:#fff;font-size:17px;color:#153657}.quiet{background:#fff;border:1px solid #d1e0f0;border-radius:12px;padding:11px 13px;color:#1456a8;font-size:13px;font-weight:800}.countdown{margin-top:9px;color:#37618c;font-size:13px;min-height:20px}
+    .paths{margin:10px 0 0;color:#536a7c;font-size:14px;padding-left:21px}.paths li{padding:6px 0}.extra{border:0;background:transparent;padding:11px 0;color:#1665d6;font-weight:750;font-size:14px;display:flex;gap:8px;align-items:center}.details{display:none}.details.show{display:block}
+    .footer{text-align:center;color:#7a8b9a;font-size:12px;margin-top:24px;line-height:1.7}.footer a{color:#1862bf;text-decoration:underline;text-underline-offset:3px}.tip{font-size:13px;color:#64788a}.divider{border-top:1px solid #e9eff5;margin:17px 0}.mini-link{font-size:13px;font-weight:700;color:#0d64bd;text-decoration:underline;text-underline-offset:3px}
+    .installtoast{position:fixed;bottom:13px;left:12px;right:12px;max-width:550px;margin:auto;background:#102a43;color:#fff;border-radius:16px;padding:13px 16px;display:none;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 8px 25px #0004;z-index:10;font-size:13px}.installtoast button{border:0;border-radius:10px;background:white;padding:9px 12px;color:#173b60;font-weight:800}.installtoast.show{display:flex}
+    @media(min-width:700px){.head{border-radius:0 0 30px 30px}.shell{padding-bottom:60px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header class="head">
+    <div class="brand"><div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2.5" width="14" height="17" rx="3"/><path d="M5 9h14M8 19.5v2m8-2v2M8 14h2m4 0h2"/></svg></div><div><h1>Mi Bus Gijón</h1><p>El Corte Inglés · Rey Pelayo · ALSA</p></div></div>
+    <div class="topline"><div><span id="clock" class="clock">--:--</span><span class="today" id="today">Hora de Gijón</span></div><span id="signal" class="signal"><i class="dot"></i><span id="nettext">Comprobando red</span></span></div>
+  </header>
+  <main>
+    <p class="sec-title">Selecciona tu trayecto</p>
+    <nav class="modes" aria-label="Trayecto">
+      <button id="morningBtn" class="mode" type="button" aria-pressed="false"><span class="glyph" aria-hidden="true">☀️</span><strong>Por la mañana</strong><small>Al trabajo · Rey Pelayo</small></button>
+      <button id="eveningBtn" class="mode" type="button" aria-pressed="false"><span class="glyph" aria-hidden="true">🌙</span><strong>A la estación</strong><small>ALSA · Volver a Oviedo</small></button>
+    </nav>
+
+    <section class="panel" aria-labelledby="routeTitle">
+      <span class="pill" id="routePill">☀️ IDA · MAÑANA</span>
+      <h2 class="headline" id="routeTitle">El Corte Inglés → Rey Pelayo</h2>
+      <p class="sub" id="routeSub">Para ir al trabajo sin dar vueltas.</p>
+      <div id="originSwitcher" class="stopchoice" role="group" aria-label="Parada de salida por la mañana">
+        <button id="mainStop" type="button" class="choice selected" aria-pressed="true">155 · Corte Inglés</button>
+        <button id="altStop" type="button" class="choice" aria-pressed="false">67 · Severo Ochoa</button>
+      </div>
+      <div class="route">
+        <div class="rail"><span class="circle" id="originNum">155</span><span class="stick"></span><span class="circle finish" id="destNum">73</span></div>
+        <div><div class="stop"><span class="micro">Sube en esta parada</span><b id="originName">Avda. Oviedo (Centro Comercial)</b><span id="originInfo">Parada 155 · junto al Corte Inglés</span></div><div class="stop last" style="margin-top:26px"><span class="micro" id="destLabel">Bájate aquí</span><b id="destName">Rey Pelayo · Constitución</b><span id="destInfo">Parada 73 · 3 paradas desde la 155</span></div></div>
+      </div>
+      <a class="primary" id="liveButton" href="https://busgijon.info/parada/155/" target="_blank" rel="noopener noreferrer">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Ver llegadas en directo
+      </a>
+      <a class="secondary" id="mapButton" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        Abrir ruta en Google Maps
+      </a>
+      <p class="realtime-note">Las llegadas se consultan en BusGijón Info (datos de EMTUSA). No mostramos minutos inventados.</p>
+    </section>
+    <section class="panel" aria-labelledby="busTitle">
+      <div class="rowtitle"><h2 id="busTitle">Qué buses puedes coger</h2><small id="busCount">2 opciones</small></div>
+      <div id="buses"></div>
+      <div id="warning" class="notebox"><span class="ico">💡</span><span>Comprueba siempre el destino del autobús antes de subir.</span></div>
+      <button type="button" id="detailsButton" class="extra" aria-expanded="false">Ver paradas intermedias <span id="detailsChevron">⌄</span></button>
+      <div id="details" class="details"><ol class="paths" id="stopsList"></ol></div>
+    </section>
+    <section class="panel" id="alsaSection" aria-labelledby="alsaTitle" hidden>
+      <div class="rowtitle"><h2 id="alsaTitle">Tu ALSA a Oviedo</h2><small>Opcional</small></div>
+      <p class="tip" style="margin-top:0">Si guardas la hora a la que sale, verás cuánto queda para cogerlo. No es una consulta de horarios de ALSA.</p>
+      <div class="times"><label for="alsaTime">Hora de salida de tu ALSA</label><div class="time-row"><input id="alsaTime" type="time" aria-label="Hora de salida de ALSA"><button id="clearTime" class="quiet" type="button">Borrar</button></div><div class="countdown" id="countdown" aria-live="polite">Sin hora guardada</div></div>
+    </section>
+    <section class="panel" aria-labelledby="helpTitle">
+      <div class="rowtitle"><h2 id="helpTitle">Accesos rápidos</h2></div>
+      <a class="secondary" href="https://busgijon.info/parada/73/" target="_blank" rel="noopener noreferrer" style="margin-top:0">🚏 Rey Pelayo · Parada 73</a>
+      <a class="secondary" href="https://busgijon.info/parada/155/" target="_blank" rel="noopener noreferrer">🚏 Corte Inglés · Parada 155</a>
+      <a class="secondary" href="https://busgijon.info/parada/67/" target="_blank" rel="noopener noreferrer">🚏 Severo Ochoa · Parada 67</a>
+      <div class="divider"></div>
+      <p class="tip" style="margin:0 0 8px"><strong>Cómo instalarla en Android:</strong> al alojar estos archivos en una web HTTPS, abre la dirección en Chrome y pulsa ⋮ → «Instalar aplicación» o «Añadir a pantalla de inicio».</p>
+      <button type="button" id="installInline" class="extra" style="display:none">＋ Instalar aplicación</button>
+      <p class="tip" style="margin:0">También puedes abrir este archivo HTML directamente en el móvil; para instalarla como PWA necesitas alojarla en HTTPS.</p>
+    </section>
+  </main>
+  <footer class="footer">Mi Bus Gijón · Hecha para tus trayectos diarios<br>Recorridos revisados: 27/10/2026 · <a href="https://busgijon.info/faq/" target="_blank" rel="noopener noreferrer">Sobre las llegadas</a><br>App personal no oficial · EMTUSA gestiona el servicio</footer>
+</div>
+<div class="installtoast" id="installToast"><span>📲 Puedes instalar Mi Bus Gijón en tu móvil</span><button id="installButton" type="button">Instalar</button></div>
+<script>
+(function(){'use strict';
+  const $=(id)=>document.getElementById(id);
+  const saved=(key,fallback)=>{try{return localStorage.getItem(key)||fallback}catch(e){return fallback}};
+  const save=(key,value)=>{try{localStorage.setItem(key,value)}catch(e){}};
+  const dateTimeFormatter=new Intl.DateTimeFormat('es-ES',{timeZone:'Europe/Madrid',hour:'2-digit',minute:'2-digit',hour12:false});
+  const dayFormatter=new Intl.DateTimeFormat('es-ES',{timeZone:'Europe/Madrid',weekday:'long',day:'numeric',month:'long'});
+  const partsFormatter=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Madrid',hour:'2-digit',minute:'2-digit',hour12:false});
+  function localHour(){return Number(partsFormatter.format(new Date()).split(':')[0])}
+  let mode=(localHour()>=5&&localHour()<14)?'morning':'evening';
+  let selectedOrigin=saved('mbg_origin','155'); if(!['155','67'].includes(selectedOrigin))selectedOrigin='155';
+  let openDetails=false, installPrompt=null;
+  const configs={
+    morning155:{
+      label:'☀️ IDA · MAÑANA',title:'Corte Inglés → Rey Pelayo',subtitle:'Sal del centro comercial y baja en Rey Pelayo.',origin:'155',originName:'Avda. Oviedo (Centro Comercial)',originInfo:'Parada 155 · sentido centro de Gijón',destination:'73',destinationName:'Rey Pelayo · Constitución',destinationInfo:'Parada 73 · 3 paradas después',live:'https://busgijon.info/parada/155/',
+      googleOrigin:'Avenida de Oviedo Centro Comercial Gijón',googleDest:'Rey Pelayo Avenida de la Constitución Gijón',
+      buses:[{n:'6',dir:'Hacia centro / Humedal',info:'Pasa por Sedes y después Rey Pelayo.',color:'blue',tag:'3 paradas'},{n:'15',dir:'Hacia centro / Cabueñes',info:'Pasa por Sedes y después Rey Pelayo.',color:'green',tag:'3 paradas'}],
+      stops:['155 · Avda. Oviedo (Centro Comercial)','156 · Estación de Servicio Foro','157 · Sedes','73 · Avda. Constitución (Rey Pelayo)'],
+      warning:'En la 155, fíjate en el sentido hacia el centro: el 6 y el 15 tienen que pasar por Sedes antes de Rey Pelayo.'
+    },
+    morning67:{
+      label:'☀️ IDA · ALTERNATIVA',title:'Severo Ochoa → Rey Pelayo',subtitle:'Alternativa muy cerca del Corte Inglés.',origin:'67',originName:'Severo Ochoa (Centro Comercial)',originInfo:'Parada 67 · cabecera de la línea 10',destination:'73',destinationName:'Rey Pelayo · Constitución',destinationInfo:'Parada 73 · 7 paradas después',live:'https://busgijon.info/parada/67/',
+      googleOrigin:'Calle Severo Ochoa Centro Comercial Gijón',googleDest:'Rey Pelayo Avenida de la Constitución Gijón',
+      buses:[{n:'10',dir:'Hacia Somió / Cabueñes',info:'Pasa por Soria y llega a Rey Pelayo.',color:'blue',tag:'7 paradas'}],
+      stops:['67 · Severo Ochoa (Centro Comercial)','42 · Álava','68 · Río Eo','69 · La Mancha','70 · Gaspar García Laviana','71 · Iglesia de San Miguel','72 · Soria','73 · Avda. Constitución (Rey Pelayo)'],
+      warning:'El 10 sale de la parada 67, no de la 155. Es otra parada cercana al centro comercial.'
+    },
+    evening:{
+      label:'🌙 VUELTA · ESTACIÓN ALSA',title:'Rey Pelayo → Estación ALSA',subtitle:'Al terminar de trabajar, hacia el autobús a Oviedo.',origin:'73',originName:'Rey Pelayo · Constitución',originInfo:'Parada 73 · Avenida de la Constitución',destination:'76',destinationName:'Humedal → Estación ALSA',destinationInfo:'Líneas 10/15: parada 76 · unos 2 min andando',live:'https://busgijon.info/parada/73/',
+      googleOrigin:'Avenida de la Constitución Rey Pelayo Gijón',googleDest:'Estación de Autobuses ALSA Gijón Calle Magnus Blikstad',
+      buses:[{n:'10',dir:'Hacia Somió / Cabueñes',info:'Baja en Humedal (lado cabina), parada 76.',color:'blue',tag:'3 paradas'},{n:'15',dir:'Solo hacia Plaza del Carmen',info:'Baja en Humedal (lado cabina), parada 76.',color:'green',tag:'4 paradas'},{n:'6',dir:'Hacia centro / Humedal',info:'Baja en Humedal (lado semáforo), parada 51.',color:'purple',tag:'4 paradas'},{n:'14/25',dir:'Hacia centro / Infanzón',info:'Baja en Plaza Europa, parada 131; 2–3 min andando.',color:'gray',tag:'3 paradas'}],
+      stops:['73 · Rey Pelayo (subir)','74 · Manuel Llaneza','75 · Prendes Pando','10: 76 · Humedal (lado cabina)','15: 131 · Plaza Europa → 76 · Humedal (lado cabina)','6: 131 · Plaza Europa → 51 · Humedal (lado semáforo)','14/25: 131 · Plaza Europa (bajar)'],
+      warning:'Muy importante: si coges el 15, tiene que indicar «Plaza del Carmen». Algunos 15 se desvían por Puerta la Villa y no pasan por el Humedal. El 14/25 te deja en Plaza Europa, no en la misma parada que el 10.'
+    }
+  };
+  function render(){
+    const morning=mode==='morning'; const c=configs[morning?('morning'+selectedOrigin):'evening'];
+    $('morningBtn').classList.toggle('active',morning);$('eveningBtn').classList.toggle('active',!morning);
+    $('morningBtn').setAttribute('aria-pressed',String(morning));$('eveningBtn').setAttribute('aria-pressed',String(!morning));
+    $('originSwitcher').hidden=!morning;$('alsaSection').hidden=morning;
+    $('mainStop').classList.toggle('selected',selectedOrigin==='155');$('altStop').classList.toggle('selected',selectedOrigin==='67');
+    $('mainStop').setAttribute('aria-pressed',String(selectedOrigin==='155'));$('altStop').setAttribute('aria-pressed',String(selectedOrigin==='67'));
+    $('routePill').textContent=c.label;$('routeTitle').textContent=c.title;$('routeSub').textContent=c.subtitle;
+    $('originNum').textContent=c.origin;$('originName').textContent=c.originName;$('originInfo').textContent=c.originInfo;
+    $('destNum').textContent=c.destination;$('destName').textContent=c.destinationName;$('destInfo').textContent=c.destinationInfo;
+    $('liveButton').href=c.live;
+    $('mapButton').href='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(c.googleOrigin)+'&destination='+encodeURIComponent(c.googleDest)+'&travelmode=transit';
+    $('busCount').textContent=c.buses.length+(c.buses.length===1?' opción':' opciones');
+    $('buses').replaceChildren(...c.buses.map(b=>{
+      const el=document.createElement('div');el.className='buscard';
+      const num=document.createElement('span');num.className='busnum '+(b.color==='green'?'green':b.color==='purple'?'purple':b.color==='gray'?'gray':'');num.textContent=b.n;
+      const meta=document.createElement('div');meta.className='busmeta';
+      const title=document.createElement('strong');title.textContent=b.dir;
+      const small=document.createElement('small');small.textContent=b.info;
+      const badge=document.createElement('span');badge.className='dest';badge.textContent=b.tag;
+      meta.append(title,small,badge);el.append(num,meta);return el;
+    }));
+    $('warning').querySelector('span:last-child').textContent=c.warning;
+    $('stopsList').replaceChildren(...c.stops.map(s=>{const el=document.createElement('li');el.textContent=s;return el}));
+    updateDetails();
+  }
+  function updateDetails(){ $('details').classList.toggle('show',openDetails);$('detailsButton').setAttribute('aria-expanded',String(openDetails));$('detailsButton').innerHTML=(openDetails?'Ocultar paradas':'Ver paradas intermedias')+' <span aria-hidden="true">'+(openDetails?'⌃':'⌄')+'</span>'; }
+  function tick(){const now=new Date();$('clock').textContent=dateTimeFormatter.format(now);let date=dayFormatter.format(now);$('today').textContent=date.charAt(0).toUpperCase()+date.slice(1);updateCountdown()}
+  function updateCountdown(){
+    const v=$('alsaTime').value;if(!v){$('countdown').textContent='Sin hora guardada';return}
+    const now=partsFormatter.format(new Date()).split(':');const minsNow=Number(now[0])*60+Number(now[1]);const a=v.split(':');const rem=Number(a[0])*60+Number(a[1])-minsNow;
+    $('countdown').textContent=rem>0?('Quedan '+(Math.floor(rem/60)?Math.floor(rem/60)+' h ':'')+(rem%60)+' min para tu ALSA de las '+v):rem===0?'Tu ALSA sale ahora, según la hora guardada.':'La hora guardada ya ha pasado hoy.';
+  }
+  $('morningBtn').addEventListener('click',()=>{mode='morning';render()});
+  $('eveningBtn').addEventListener('click',()=>{mode='evening';render()});
+  $('mainStop').addEventListener('click',()=>{selectedOrigin='155';save('mbg_origin',selectedOrigin);render()});
+  $('altStop').addEventListener('click',()=>{selectedOrigin='67';save('mbg_origin',selectedOrigin);render()});
+  $('detailsButton').addEventListener('click',()=>{openDetails=!openDetails;updateDetails()});
+  $('alsaTime').value=saved('mbg_alsa','');
+  $('alsaTime').addEventListener('change',()=>{save('mbg_alsa',$('alsaTime').value);updateCountdown()});
+  $('clearTime').addEventListener('click',()=>{$('alsaTime').value='';save('mbg_alsa','');updateCountdown()});
+  function updateNetwork(){const online=navigator.onLine;$('signal').classList.toggle('off',!online);$('nettext').textContent=online?'Con conexión':'Sin conexión';}
+  window.addEventListener('online',updateNetwork);window.addEventListener('offline',updateNetwork);
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('installToast').classList.add('show');$('installInline').style.display='flex'});
+  async function install(){if(!installPrompt)return;installPrompt.prompt();try{await installPrompt.userChoice}catch(e){}installPrompt=null;$('installToast').classList.remove('show');$('installInline').style.display='none'}
+  $('installButton').addEventListener('click',install);$('installInline').addEventListener('click',install);
+  window.addEventListener('appinstalled',()=>{$('installToast').classList.remove('show');$('installInline').style.display='none'});
+  if('serviceWorker' in navigator && ['https:','http:'].includes(location.protocol)){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+  render();updateNetwork();tick();setInterval(tick,15_000);
+})();
+</script>
+</body>
+</html>
